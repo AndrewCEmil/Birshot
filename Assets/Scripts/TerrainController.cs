@@ -3,6 +3,8 @@ using System.Collections;
 
 public class TerrainController : MonoBehaviour {
 
+	public GameObject player;
+
 	private Terrain terrain;
 	private TerrainData terrainData;
 	private bool hasGenerated;
@@ -29,6 +31,9 @@ public class TerrainController : MonoBehaviour {
 			}
 			terrainData.SetHeights (0, 0, heights);
 			hasGenerated = true;
+			//Vector3 newPos = new Vector3 (terrain.GetPosition ().x, heights[(int) terrain.GetPosition().x, (int) terrain.GetPosition().z], terrain.GetPosition ().z);
+			Vector3 newPos = new Vector3 (500, terrain.SampleHeight(new Vector3(500, 500, 500)), 500);
+			player.transform.position = newPos;
 		}
 	}
 }
