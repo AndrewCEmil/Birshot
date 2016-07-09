@@ -49,9 +49,9 @@ public class PlayerController : MonoBehaviour {
 	}
 
 	void TransitionChargeToFly() {
-		rb.isKinematic = true;
+		rb.isKinematic = false;
 		int frames = Time.frameCount - chargeStart;
-		Vector3 theForwardDirection = transform.TransformDirection (Vector3.forward);
+		Vector3 theForwardDirection = camera.transform.TransformDirection (Vector3.forward);
 		rb.velocity = theForwardDirection * frames;
 		state = "fly";
 	}
