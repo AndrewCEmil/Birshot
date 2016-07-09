@@ -18,6 +18,7 @@ public class TerrainController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		Vector3 max = new Vector3 (0,0,0);
 		if (!hasGenerated) {
 			float hmWidth = terrainData.heightmapWidth;
 			float hmHeight = terrainData.heightmapHeight;
@@ -27,13 +28,19 @@ public class TerrainController : MonoBehaviour {
 				for (float j = 0; j < hmHeight; j++) {
 					current = Mathf.PerlinNoise(i / hmWidth ,j / hmHeight);
 					heights [(int)i, (int)j] = current;
+					if (current > max.y) {
+						max.x = i;
+						max.y = current;
+						max.z = j;
+					}
 				}
 			}
 			terrainData.SetHeights (0, 0, heights);
 			hasGenerated = true;
 			//Vector3 newPos = new Vector3 (terrain.GetPosition ().x, heights[(int) terrain.GetPosition().x, (int) terrain.GetPosition().z], terrain.GetPosition ().z);
-			Vector3 newPos = new Vector3 (500, terrain.SampleHeight(new Vector3(500, 500, 500)), 500);
-			player.transform.position = newPos;
+			//Vector3 newPos = new Vector3 (100, terrain.SampleHeight(new Vector3(100, 100, 100)), 100);
+			max.y = terrain.SampleHeight(max);
+			player.transform.position = max;
 		}
 	}
 }
