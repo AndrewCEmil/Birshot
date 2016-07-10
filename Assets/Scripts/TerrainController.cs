@@ -21,8 +21,8 @@ public class TerrainController : MonoBehaviour {
 		hasGenerated = false;
 		hmWidth = terrainData.heightmapWidth;
 		hmHeight = terrainData.heightmapHeight;
-		mWidth = 250;
-		mHeight = 250;
+		mWidth = 1024;
+		mHeight = 1024;
 	}
 	
 	// Update is called once per frame
