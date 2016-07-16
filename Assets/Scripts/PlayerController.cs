@@ -5,25 +5,49 @@ using System;
 public class PlayerController : MonoBehaviour {
 
 	public GameObject camera;
-	public GameObject powerBar;
 	private string state;
 	private Rigidbody rb;
 	private int chargeStart;
-	private Sprite powerSprite;
-	private SpriteRenderer powerSpriteRenderer;
 	// Use this for initialization
+	private SpriteRenderer[] powerUnits;
+	private int currentPowerLevel;
 	void Start () {
 		state = "start";
 		rb = GetComponent<Rigidbody> ();
 		rb.isKinematic = true;
-		powerSprite = powerBar.GetComponent<Sprite> ();
-		powerSpriteRenderer = powerBar.GetComponent<SpriteRenderer> ();
-		powerSpriteRenderer.enabled = false;
+		powerUnits = new SpriteRenderer[7];
+		for (int i = 0; i < 7; i++) {
+			powerUnits [i] = GameObject.Find("PB" + i).GetComponent<SpriteRenderer> ();
+		}
+		clearPowerBar ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		//
+		if (state == "charge") {
+			setCurrentPowerLevel ();
+			updatePowerBar ();
+		}
+	}
+
+	void setCurrentPowerLevel() {
+		currentPowerLevel = Mathf.Clamp ((Time.frameCount - chargeStart) / 10, 0, 7);
+	}
+
+	void updatePowerBar() {
+		for (int i = 0; i < 7; i++) {
+			if (i < currentPowerLevel) {
+				powerUnits [i].enabled = true;
+			} else {
+				powerUnits [i].enabled = false;
+			}
+		}
+	}
+
+	void clearPowerBar() {
+		for (int i = 0; i < 7; i++) {
+			powerUnits [i].enabled = false;
+		}
 	}
 
 	void OnEnable(){
@@ -51,7 +75,6 @@ public class PlayerController : MonoBehaviour {
 
 	void TransitionStartToCharge() {
 		chargeStart = Time.frameCount;
-		powerSpriteRenderer.enabled = true;
 		state = "charge";
 	}
 
@@ -60,6 +83,7 @@ public class PlayerController : MonoBehaviour {
 		int frames = Time.frameCount - chargeStart;
 		Vector3 theForwardDirection = camera.transform.TransformDirection (Vector3.forward);
 		rb.velocity = theForwardDirection * frames;
+		clearPowerBar ();
 		state = "fly";
 	}
 }
