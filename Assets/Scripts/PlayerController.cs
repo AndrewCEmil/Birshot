@@ -5,14 +5,20 @@ using System;
 public class PlayerController : MonoBehaviour {
 
 	public GameObject camera;
+	public GameObject powerBar;
 	private string state;
 	private Rigidbody rb;
 	private int chargeStart;
+	private Sprite powerSprite;
+	private SpriteRenderer powerSpriteRenderer;
 	// Use this for initialization
 	void Start () {
 		state = "start";
 		rb = GetComponent<Rigidbody> ();
 		rb.isKinematic = true;
+		powerSprite = powerBar.GetComponent<Sprite> ();
+		powerSpriteRenderer = powerBar.GetComponent<SpriteRenderer> ();
+		powerSpriteRenderer.enabled = false;
 	}
 	
 	// Update is called once per frame
@@ -45,6 +51,7 @@ public class PlayerController : MonoBehaviour {
 
 	void TransitionStartToCharge() {
 		chargeStart = Time.frameCount;
+		powerSpriteRenderer.enabled = true;
 		state = "charge";
 	}
 
