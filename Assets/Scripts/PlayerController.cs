@@ -86,4 +86,12 @@ public class PlayerController : MonoBehaviour {
 		clearPowerBar ();
 		state = "fly";
 	}
+
+
+	void OnTriggerEnter(Collider other) {
+		if (other.CompareTag ("Target")) {
+			//Player has been struck
+			Handheld.Vibrate ();
+		}
+	}
 }

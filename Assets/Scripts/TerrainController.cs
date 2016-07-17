@@ -5,6 +5,7 @@ using System.Collections;
 public class TerrainController : MonoBehaviour {
 
 	public GameObject player;
+	public GameObject target;
 
 	private Terrain terrain;
 	private TerrainData terrainData;
@@ -21,8 +22,8 @@ public class TerrainController : MonoBehaviour {
 		hasGenerated = false;
 		hmWidth = terrainData.heightmapWidth;
 		hmHeight = terrainData.heightmapHeight;
-		mWidth = 1024;
-		mHeight = 1024;
+		mWidth = terrainData.size.x;
+		mHeight = terrainData.size.z;
 	}
 	
 	// Update is called once per frame
@@ -39,11 +40,19 @@ public class TerrainController : MonoBehaviour {
 			}
 			terrainData.SetHeights (0, 0, heights);
 			hasGenerated = true;
-			//Vector3 newPos = new Vector3 (terrain.GetPosition ().x, heights[(int) terrain.GetPosition().x, (int) terrain.GetPosition().z], terrain.GetPosition ().z);
-			//Vector3 newPos = new Vector3 (100, terrain.SampleHeight(new Vector3(100, 100, 100)), 100);
 			player.transform.position = getMaxHeight();
-
+			setTargets ();
 			splat ();
+		}
+	}
+
+	void setTargets() {
+		GameObject newTarget;
+		for (int i = 0; i < 30; i++) {
+			Vector3 pos = new Vector3 ((float) Random.Range (0, mWidth), 0f, (float) Random.Range (0, mHeight));
+			pos.y = terrain.SampleHeight (pos);
+			newTarget = Instantiate (target);
+			newTarget.transform.position = pos;
 		}
 	}
 
