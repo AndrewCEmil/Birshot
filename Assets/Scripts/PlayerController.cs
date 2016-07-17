@@ -27,6 +27,10 @@ public class PlayerController : MonoBehaviour {
 		if (state == "charge") {
 			setCurrentPowerLevel ();
 			updatePowerBar ();
+		} else if (state == "fly") {
+			if (rb.velocity.magnitude < 1) {
+				TransitionFlyToStart ();
+			}
 		}
 	}
 
@@ -87,11 +91,18 @@ public class PlayerController : MonoBehaviour {
 		state = "fly";
 	}
 
+	void TransitionFlyToStart () {
+		rb.isKinematic = false;
+		rb.velocity = new Vector3(0, 0, 0);
+		state = "start";
+	}
 
 	void OnTriggerEnter(Collider other) {
 		if (other.CompareTag ("Target")) {
 			//Player has been struck
 			Handheld.Vibrate ();
+			//GAME OVER
+			TransitionFlyToStart ();
 		}
 	}
 }

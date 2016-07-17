@@ -48,7 +48,7 @@ public class TerrainController : MonoBehaviour {
 
 	void setTargets() {
 		GameObject newTarget;
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 3; i++) {
 			Vector3 pos = new Vector3 ((float) Random.Range (0, mWidth), 0f, (float) Random.Range (0, mHeight));
 			pos.y = terrain.SampleHeight (pos);
 			newTarget = Instantiate (target);
