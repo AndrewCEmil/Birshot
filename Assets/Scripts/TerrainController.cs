@@ -14,6 +14,7 @@ public class TerrainController : MonoBehaviour {
 	private float hmHeight;
 	private float mWidth;
 	private float mHeight;
+	private PlayerController pc;
 	// Use this for initialization
 	void Start () {
 		print (gameObject.ToString());
@@ -24,6 +25,7 @@ public class TerrainController : MonoBehaviour {
 		hmHeight = terrainData.heightmapHeight;
 		mWidth = terrainData.size.x;
 		mHeight = terrainData.size.z;
+		pc = player.GetComponent<PlayerController> ();
 	}
 	
 	// Update is called once per frame
@@ -32,28 +34,55 @@ public class TerrainController : MonoBehaviour {
 
 			float[,] heights = terrainData.GetHeights (0, 0, (int)hmWidth, (int)hmHeight);
 			float current = 0f;
+			float max = 0f;
 			for (float i = 0; i < hmWidth; i++) {
 				for (float j = 0; j < hmHeight; j++) {
-					current = Mathf.PerlinNoise(i / hmWidth ,j / hmHeight);
+					current = Mathf.PerlinNoise (i / hmWidth, j / hmHeight);
 					heights [(int)i, (int)j] = current;
+					if (current > max) {
+						max = current;
+					}
 				}
+			}
+
+			for (float i = 0; i < hmWidth; i++) {
+				heights [0, (int)i] = max + .1f;
 			}
 			terrainData.SetHeights (0, 0, heights);
 			hasGenerated = true;
-			player.transform.position = getMaxHeight();
+			setPlayer ();
 			setTargets ();
 			splat ();
+		} else {
+			if (playerTooFar ()) {
+				setPlayer ();
+			}
 		}
 	}
 
-	void setTargets() {
-		GameObject newTarget;
-		for (int i = 0; i < 3; i++) {
-			Vector3 pos = new Vector3 ((float) Random.Range (0, mWidth), 0f, (float) Random.Range (0, mHeight));
-			pos.y = terrain.SampleHeight (pos);
-			newTarget = Instantiate (target);
-			newTarget.transform.position = pos;
+	bool playerTooFar() {
+		Vector3 pos = player.transform.position;
+		if (pos.x > mWidth || pos.x < 0) {
+			return true;
+		} else if (pos.z > mHeight || pos.z < 0) {
+			return true;
+		} else if (pos.y < 0) { //just for safety
+			return true;
 		}
+		return false;
+	}
+
+	void setPlayer() {
+		Vector3 maxHeight = getMaxHeight ();
+		maxHeight.x = mWidth / 2.0f;
+		player.transform.position = maxHeight;
+		pc.Reset ();
+	}
+
+	void setTargets() {
+		Vector3 pos = new Vector3 ((float) Random.Range (0, mWidth), 0f, (float) Random.Range (mHeight * 3 / 4, mHeight));
+		pos.y = terrain.SampleHeight (pos);
+		target.transform.position = pos;
 	}
 
 	Vector3 getMaxHeight() {

@@ -86,9 +86,13 @@ public class PlayerController : MonoBehaviour {
 		rb.isKinematic = false;
 		int frames = Time.frameCount - chargeStart;
 		Vector3 theForwardDirection = camera.transform.TransformDirection (Vector3.forward);
-		rb.velocity = theForwardDirection * frames;
+		rb.velocity = theForwardDirection * ((float)currentPowerLevel * 20f);
 		clearPowerBar ();
 		state = "fly";
+	}
+
+	public void Reset() {
+		TransitionFlyToStart();
 	}
 
 	void TransitionFlyToStart () {
@@ -96,6 +100,7 @@ public class PlayerController : MonoBehaviour {
 		rb.velocity = new Vector3(0, 0, 0);
 		state = "start";
 	}
+
 
 	void OnTriggerEnter(Collider other) {
 		if (other.CompareTag ("Target")) {
