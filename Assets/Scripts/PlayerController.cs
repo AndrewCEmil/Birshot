@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour {
 			//Player has been struck
 			Handheld.Vibrate ();
 			//GAME OVER
-			TransitionFlyToStart ();
+			Reset();
 		}
 	}
 }

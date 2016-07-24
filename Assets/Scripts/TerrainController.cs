@@ -30,6 +30,7 @@ public class TerrainController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		float seed = Random.insideUnitCircle.x;
 		if (!hasGenerated) {
 
 			float[,] heights = terrainData.GetHeights (0, 0, (int)hmWidth, (int)hmHeight);
@@ -37,7 +38,7 @@ public class TerrainController : MonoBehaviour {
 			float max = 0f;
 			for (float i = 0; i < hmWidth; i++) {
 				for (float j = 0; j < hmHeight; j++) {
-					current = Mathf.PerlinNoise (i / hmWidth, j / hmHeight);
+					current = Mathf.PerlinNoise (seed + i / hmWidth, seed + j / hmHeight);
 					heights [(int)i, (int)j] = current;
 					if (current > max) {
 						max = current;
